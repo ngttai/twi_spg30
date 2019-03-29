@@ -88,11 +88,11 @@ int main(void)
     const char *driver_version = sgp30_get_driver_version();
     if (driver_version)
     {
-        NRF_LOG_INFO("SGP30 driver version %s\n", driver_version);
+        NRF_LOG_INFO("SGP30 driver version %s", driver_version);
     }
     else
     {
-        NRF_LOG_INFO("fatal: Getting driver version failed\n");
+        NRF_LOG_INFO("fatal: Getting driver version failed");
         return -1;
     }
     NRF_LOG_FLUSH();
@@ -100,11 +100,11 @@ int main(void)
      * a sensor. */
     while (sgp30_probe() != STATUS_OK)
     {
-        NRF_LOG_INFO("SGP sensor probing failed\n");
+        NRF_LOG_INFO("SGP sensor probing failed");
         sleep(1);
     }
 
-    NRF_LOG_INFO("SGP sensor probing successful\n");
+    NRF_LOG_INFO("SGP sensor probing successful");
     NRF_LOG_FLUSH();
 
     u16 feature_set_version;
@@ -112,12 +112,12 @@ int main(void)
     err = sgp30_get_feature_set_version(&feature_set_version, &product_type);
     if (err == STATUS_OK)
     {
-        NRF_LOG_INFO("Feature set version: %u\n", feature_set_version);
-        NRF_LOG_INFO("Product type: %u\n", product_type);
+        NRF_LOG_INFO("Feature set version: %u", feature_set_version);
+        NRF_LOG_INFO("Product type: %u", product_type);
     }
     else
     {
-        NRF_LOG_INFO("sgp30_get_feature_set_version failed!\n");
+        NRF_LOG_INFO("sgp30_get_feature_set_version failed!");
     }
     NRF_LOG_FLUSH();
     u64 serial_id;
@@ -128,7 +128,7 @@ int main(void)
     }
     else
     {
-        NRF_LOG_INFO("sgp30_get_serial_id failed!\n");
+        NRF_LOG_INFO("sgp30_get_serial_id failed!");
     }
     NRF_LOG_FLUSH();
     /* Read gas raw signals */
@@ -137,12 +137,12 @@ int main(void)
     if (err == STATUS_OK)
     {
         /* Print ethanol raw signal and h2 raw signal */
-        NRF_LOG_INFO("Ethanol raw signal: %u\n", ethanol_raw_signal);
-        NRF_LOG_INFO("H2 raw signal: %u\n", h2_raw_signal);
+        NRF_LOG_INFO("Ethanol raw signal: %u", ethanol_raw_signal);
+        NRF_LOG_INFO("H2 raw signal: %u", h2_raw_signal);
     }
     else
     {
-        NRF_LOG_INFO("error reading raw signals\n");
+        NRF_LOG_INFO("error reading raw signals");
     }
     NRF_LOG_FLUSH();
     /* Consider the two cases (A) and (B):
@@ -152,11 +152,11 @@ int main(void)
     err = sgp30_iaq_init();
     if (err == STATUS_OK)
     {
-        NRF_LOG_INFO("sgp30_iaq_init done\n");
+        NRF_LOG_INFO("sgp30_iaq_init done");
     }
     else
     {
-        NRF_LOG_INFO("sgp30_iaq_init failed!\n");
+        NRF_LOG_INFO("sgp30_iaq_init failed!");
     }
     NRF_LOG_FLUSH();
     /* (B) If a recent baseline is available, set it after sgp30_iaq_init() for
@@ -175,12 +175,11 @@ int main(void)
         err = sgp30_measure_iaq_blocking_read(&tvoc_ppb, &co2_eq_ppm);
         if (err == STATUS_OK)
         {
-            NRF_LOG_INFO("tVOC  Concentration: %dppb\n", tvoc_ppb);
-            NRF_LOG_INFO("CO2eq Concentration: %dppm\n", co2_eq_ppm);
+            NRF_LOG_INFO("tVOC:  %dppb; CO2eq: %dppm", tvoc_ppb, co2_eq_ppm);
         }
         else
         {
-            NRF_LOG_INFO("error reading IAQ values\n");
+            NRF_LOG_INFO("error reading IAQ values");
         }
         NRF_LOG_FLUSH();
         /* Persist the current baseline every hour */
