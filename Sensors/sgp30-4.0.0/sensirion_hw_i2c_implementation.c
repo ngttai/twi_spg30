@@ -46,29 +46,34 @@
  * Create new TWI instance. You may also use a different interface. In this case, please adapt
  * the code below.
  */
-static const nrf_drv_twi_t i2c_instance = NRF_DRV_TWI_INSTANCE(0);
+static const nrf_drv_twi_t *i2c_instance = NULL;
 
 /**
  * Initialize all hard- and software components that are needed for the I2C
  * communication.
  */
-void sensirion_i2c_init()
+void sgp30_init(const nrf_drv_twi_t *p_i2c_instance)
 {
-    s8 err;
-    const nrf_drv_twi_config_t i2c_instance_config = {
-        .scl = SENSIRION_SCL_PIN,
-        .sda = SENSIRION_SDA_PIN,
-        .frequency = NRF_TWI_FREQ_100K,
-        .interrupt_priority = 0};
-    /* initiate TWI instance */
-    err = nrf_drv_twi_init(&i2c_instance, &i2c_instance_config, NULL, NULL);
-    if (err)
-    {
-        /* Could be omitted if the prototyp is changed to non-void or an error flag is introduced */
-        printf("Error %d: Initialization of I2C connection failed!\n", err);
-    }
-    /* enable TWI instance */
-    nrf_drv_twi_enable(&i2c_instance);
+    i2c_instance = p_i2c_instance;
+}
+
+void sensirion_i2c_init(void)
+{
+    // s8 err;
+    // const nrf_drv_twi_config_t i2c_instance_config = {
+    //     .scl = SENSIRION_SCL_PIN,
+    //     .sda = SENSIRION_SDA_PIN,
+    //     .frequency = NRF_TWI_FREQ_100K,
+    //     .interrupt_priority = 0};
+    // /* initiate TWI instance */
+    // err = nrf_drv_twi_init(i2c_instance, &i2c_instance_config, NULL, NULL);
+    // if (err)
+    // {
+    //     /* Could be omitted if the prototyp is changed to non-void or an error flag is introduced */
+    //     printf("Error %d: Initialization of I2C connection failed!\n", err);
+    // }
+    // /* enable TWI instance */
+    // nrf_drv_twi_enable(i2c_instance);
     return;
 }
 
@@ -87,7 +92,7 @@ void sensirion_i2c_init()
  */
 s8 sensirion_i2c_read(u8 address, u8 *data, u16 count)
 {
-    s8 err = nrf_drv_twi_rx(&i2c_instance, address, data, (u8)count);
+    s8 err = nrf_drv_twi_rx(i2c_instance, address, data, (u8)count);
     return err;
 }
 
@@ -107,7 +112,7 @@ s8 sensirion_i2c_read(u8 address, u8 *data, u16 count)
  */
 s8 sensirion_i2c_write(u8 address, const u8 *data, u16 count)
 {
-    s8 err = nrf_drv_twi_tx(&i2c_instance, address, data, (u8)count, false);
+    s8 err = nrf_drv_twi_tx(i2c_instance, address, data, (u8)count, false);
     return err;
 }
 

@@ -61,6 +61,29 @@
 #include "sgp30.h"
 #include <unistd.h> // sleep
 
+/* TWI instance ID. */
+#define TWI_INSTANCE_ID 0
+
+/* TWI instance. */
+static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
+
+void twi_init(const nrf_drv_twi_t *l_twi)
+{
+    ret_code_t err_code;
+
+    const nrf_drv_twi_config_t twi_config = {
+        .scl = 27,
+        .sda = 26,
+        .frequency = TWI_DEFAULT_CONFIG_FREQUENCY,
+        .interrupt_priority = APP_IRQ_PRIORITY_HIGH,
+        .clear_bus_init = false};
+
+    err_code = nrf_drv_twi_init(l_twi, &twi_config, NULL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_twi_enable(l_twi);
+}
+
 unsigned int sleep(unsigned int seconds)
 {
     nrf_delay_ms(seconds * 1000);
@@ -84,6 +107,8 @@ int main(void)
 
     NRF_LOG_INFO("TWI SPG30 started.");
     NRF_LOG_FLUSH();
+    twi_init(&m_twi);
+    sgp30_init(&m_twi);
 
     const char *driver_version = sgp30_get_driver_version();
     if (driver_version)
@@ -124,7 +149,7 @@ int main(void)
     err = sgp30_get_serial_id(&serial_id);
     if (err == STATUS_OK)
     {
-        NRF_LOG_INFO("SerialID: %lld", serial_id);
+        NRF_LOG_INFO("Serial ID: %lld", serial_id);
     }
     else
     {
@@ -175,7 +200,7 @@ int main(void)
         err = sgp30_measure_iaq_blocking_read(&tvoc_ppb, &co2_eq_ppm);
         if (err == STATUS_OK)
         {
-            NRF_LOG_INFO("tVOC:  %dppb; CO2eq: %dppm", tvoc_ppb, co2_eq_ppm);
+            NRF_LOG_INFO("tVOC: %d (ppb); CO2eq: %d (ppm)", tvoc_ppb, co2_eq_ppm);
         }
         else
         {

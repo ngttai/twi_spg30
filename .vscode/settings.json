@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "sgp30.h": "c",
-        "sensirion_common.h": "c",
-        "sensirion_arch_config.h": "c"
-    }
-}

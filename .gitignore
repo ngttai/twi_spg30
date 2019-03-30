@@ -1,0 +1,5 @@
+# Ignore folder named `.vscode/ipch`
+.vscode/ipch
+
+# Ignore folder named `pca10040\blank\armgcc\_build\nrf52832_xxaa`
+pca10040\blank\armgcc\_build\nrf52832_xxaa

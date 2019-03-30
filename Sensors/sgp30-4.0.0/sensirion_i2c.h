@@ -31,19 +31,22 @@
 #ifndef SENSIRION_I2C_H
 #define SENSIRION_I2C_H
 
+#include <nrf_drv_twi.h>
 #include "sensirion_arch_config.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus */
+    void sgp30_init(const nrf_drv_twi_t *p_i2c_instance);
 
-void sensirion_i2c_init(void);
+    void sensirion_i2c_init(void);
 
-s8 sensirion_i2c_read(u8 address, u8* data, u16 count);
+    s8 sensirion_i2c_read(u8 address, u8 *data, u16 count);
 
-s8 sensirion_i2c_write(u8 address, const u8* data, u16 count);
+    s8 sensirion_i2c_write(u8 address, const u8 *data, u16 count);
 
-void sensirion_sleep_usec(u32 useconds);
+    void sensirion_sleep_usec(u32 useconds);
 
 #ifdef __cplusplus
 }
